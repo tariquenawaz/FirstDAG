@@ -34,6 +34,8 @@ def transform_data():
     # make all cost in GBP currency
     data.loc[data.currency == 'EUR', ['booking_cost']] = data.booking_cost * 0.8
     data.currency.replace("EUR", "GBP", inplace=True)
+    # The loc method is used to select rows of the data DataFrame where the currency column equals 'EUR'.
+    # The second argument ['booking_cost'] specifies the columns to select, which in this case is just the 'booking_cost' column.
 
     # remove unnecessary columns
     data = data.drop('address', 1)
@@ -60,7 +62,13 @@ def load_data():
                 );
              ''')
     records = pd.read_csv(f"{dag_path}/processed_data/processed_data.csv")
+    # Extacting data from processed_data.csv to a dataframe named as records
+    
     records.to_sql('booking_record', conn, if_exists='replace', index=False)
+    
+    # Here, to_sql() is a pandas method that allows you to write the contents of a dataframe to a SQL database table.
+    # The first argument is the name of the table to write to (booking_record), the second argument is the database connection object (conn),
+    # if_exists argument specifies what to do if the table already exists (here we replace it), and index=False specifies that we don't want to write the dataframe index as a column in the table.
 
 
 # initializing the default arguments that we'll pass to our DAG
@@ -89,5 +97,8 @@ task_2 = PythonOperator(
     dag=ingestion_dag,
 )
 
+# An operator is a class that represents a single task in a workflow.
+# Operators are used to define what actions are taken when a task is executed,
+# such as running a Python function, executing a SQL query, or transferring data between systems.
 
 task_1 >> task_2
