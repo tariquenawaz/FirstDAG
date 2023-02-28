@@ -84,7 +84,7 @@ ingestion_dag = DAG(
     schedule_interval=timedelta(days=1),   # will run everyday at midnigt
     catchup=False                          # if true DAG will run from past 5 days
 )
-
+# Here the name booking_ingestion will be displayed on airflow UI.
 task_1 = PythonOperator(
     task_id='transform_data',
     python_callable=transform_data,
